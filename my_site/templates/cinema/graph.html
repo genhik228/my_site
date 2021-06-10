@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<style>
+.link {
+stroke: rgb(15, 5, 151) ;
+}
+div {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+div {
+width: 100vw;
+height: 100vh;
+}
+.node text {
+pointer-events: none;
+font: 25px sans-serif;
+}
+    .container
+    {
+        position:relative;
+        width:20%;/*half the width of the whole page*/
+        height:20%;
+
+        margin:left; /*center the whole thing*/
+    }
+    .relative_container
+    {
+        padding-bottom:50%;
+        position:relative;
+        float:left;
+        width:100%;
+        height:100%;
+    }
+</style>
+<body>
+<div id="graph" class="section">
+		
+</div>
+<div class='container'>
+    <div class='relative_container' id="info1" style='background-color:rgb(236, 228, 228);'>
+    tt
+    </div>
+</div>
+<div class='container'>
+    <div class='relative_container' id="info2"  style='background-color:blue;'>
+    xkty
+    </div>
+</div>
+<div class='container'>
+    <div class='relative_container' id="info3" style='background-color:red;'>
+        gtyb
+    </div>
+</div>
+<script>
+
+var w = document.getElementById("graph").offsetWidth,
+	h = document.getElementById("graph").offsetHeight;
+
+var keyc = true, keys = true, keyt = true, keyr = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
+
+var focus_node = null, highlight_node = null;
+
+var text_center = false;
+var outline = false;
+
+var min_score = 0;
+var max_score = 1;
+var graph = {'links': [{'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': '12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'value': 1, 'dist': 700}, {'source': '12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'target': 'faces\\610296187\\457239200\\0.jpg12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': '4c378129-c182-4735-84df-9d2ac17a3317', 'value': 1, 'dist': 700}, {'source': '4c378129-c182-4735-84df-9d2ac17a3317', 'target': 'faces\\610296187\\457239195\\0.jpg4c378129-c182-4735-84df-9d2ac17a3317', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': '52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'value': 1, 'dist': 700}, {'source': '52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'target': 'faces\\610296187\\457239200\\1.jpg52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': 'aa260cb0-41bc-4051-827b-dd697117a4aa', 'value': 1, 'dist': 700}, {'source': 'aa260cb0-41bc-4051-827b-dd697117a4aa', 'target': 'faces\\610296187\\457239213\\0.jpgaa260cb0-41bc-4051-827b-dd697117a4aa', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': 'c7896a2a-7f02-4e87-84f3-4d28b668f08d', 'value': 1, 'dist': 700}, {'source': 'c7896a2a-7f02-4e87-84f3-4d28b668f08d', 'target': 'faces\\610296187\\457239216\\0.jpgc7896a2a-7f02-4e87-84f3-4d28b668f08d', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': 'e0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'value': 1, 'dist': 700}, {'source': 'e0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'target': 'faces\\610296187\\457239198\\0.jpge0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'value': 2, 'dist': 200}, {'source': 610296187, 'target': 'fd732948-0a6b-444c-ac2a-8d057f6110f6', 'value': 1, 'dist': 700}, {'source': 'fd732948-0a6b-444c-ac2a-8d057f6110f6', 'target': 'faces\\610296187\\457239237\\0.jpgfd732948-0a6b-444c-ac2a-8d057f6110f6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': 'e23aac55-2152-4379-bb82-5370ea71851e', 'value': 1, 'dist': 700}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457239018\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457239064\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457239165\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457239779\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457239875\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457241750\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 'e23aac55-2152-4379-bb82-5370ea71851e', 'target': 'faces\\602285270\\457241756\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'value': 1, 'dist': 700}, {'source': '1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'target': 'faces\\602285270\\457241753\\1.jpg1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '26ff04a0-6b09-4432-af4a-ee652a20514e', 'value': 1, 'dist': 700}, {'source': '26ff04a0-6b09-4432-af4a-ee652a20514e', 'target': 'faces\\602285270\\457243049\\0.jpg26ff04a0-6b09-4432-af4a-ee652a20514e', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '2bd04756-3628-4e28-bc0d-f8418e062713', 'value': 1, 'dist': 700}, {'source': '2bd04756-3628-4e28-bc0d-f8418e062713', 'target': 'faces\\602285270\\457241734\\0.jpg2bd04756-3628-4e28-bc0d-f8418e062713', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'value': 1, 'dist': 700}, {'source': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'target': 'faces\\602285270\\457239188\\0.jpg2df9daeb-e139-4645-9f86-3d25f203d27a', 'value': 2, 'dist': 200}, {'source': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'target': 'faces\\602285270\\457239933\\0.jpg2df9daeb-e139-4645-9f86-3d25f203d27a', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'value': 1, 'dist': 700}, {'source': '3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'target': 'faces\\602285270\\457242296\\1.jpg3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': '84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'value': 1, 'dist': 700}, {'source': '84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'target': 'faces\\602285270\\457241753\\0.jpg84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'value': 1, 'dist': 700}, {'source': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'target': 'faces\\602285270\\457239165\\1.jpgabc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'value': 2, 'dist': 200}, {'source': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'target': 'faces\\602285270\\457239875\\1.jpgabc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'value': 1, 'dist': 700}, {'source': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'target': 'faces\\602285270\\457239875\\2.jpge206f221-116d-44c1-8255-44f15e0e0ecc', 'value': 2, 'dist': 200}, {'source': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'target': 'faces\\602285270\\457239875\\3.jpge206f221-116d-44c1-8255-44f15e0e0ecc', 'value': 2, 'dist': 200}, {'source': 602285270, 'target': 'efeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'value': 1, 'dist': 700}, {'source': 'efeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'target': 'faces\\602285270\\457242296\\0.jpgefeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 598604644, 'target': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'value': 1, 'dist': 700}, {'source': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'target': 'faces\\598604644\\457239022\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'value': 2, 'dist': 200}, {'source': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'target': 'faces\\598604644\\457239336\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'value': 2, 'dist': 200}, {'source': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'target': 'faces\\598604644\\457240505\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'value': 2, 'dist': 200}, {'source': 598604644, 'target': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'value': 1, 'dist': 700}, {'source': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'target': 'faces\\598604644\\457239091\\0.jpgbb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'value': 2, 'dist': 200}, {'source': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'target': 'faces\\598604644\\457239336\\1.jpgbb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'value': 2, 'dist': 200}, {'source': 598604644, 'target': 'e3db5aac-308f-49df-9716-549415455aa8', 'value': 1, 'dist': 700}, {'source': 'e3db5aac-308f-49df-9716-549415455aa8', 'target': 'faces\\598604644\\457239132\\0.jpge3db5aac-308f-49df-9716-549415455aa8', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 602507284, 'target': 'c42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'value': 1, 'dist': 700}, {'source': 'c42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'target': 'faces\\602507284\\457242963\\0.jpgc42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'value': 2, 'dist': 200}, {'source': 602507284, 'target': '60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'value': 1, 'dist': 700}, {'source': '60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'target': 'faces\\602507284\\457239887\\2.jpg60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'value': 2, 'dist': 200}, {'source': 602507284, 'target': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'value': 1, 'dist': 700}, {'source': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'target': 'faces\\602507284\\457240718\\0.jpg77524e7e-48ad-48e1-8929-2a8c12a97486', 'value': 2, 'dist': 200}, {'source': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'target': 'faces\\602507284\\457240718\\1.jpg77524e7e-48ad-48e1-8929-2a8c12a97486', 'value': 2, 'dist': 200}, {'source': 602507284, 'target': '7970c907-af4f-44fb-9d05-cb4af0f528b5', 'value': 1, 'dist': 700}, {'source': '7970c907-af4f-44fb-9d05-cb4af0f528b5', 'target': 'faces\\602507284\\457239887\\1.jpg7970c907-af4f-44fb-9d05-cb4af0f528b5', 'value': 2, 'dist': 200}, {'source': 602507284, 'target': 'bbde538d-5c94-47e3-8679-cd0e765cd97a', 'value': 1, 'dist': 700}, {'source': 'bbde538d-5c94-47e3-8679-cd0e765cd97a', 'target': 'faces\\602507284\\457239887\\0.jpgbbde538d-5c94-47e3-8679-cd0e765cd97a', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 599541040, 'target': '2eb8a471-f2b1-400e-96fc-089d95fbf891', 'value': 1, 'dist': 700}, {'source': '2eb8a471-f2b1-400e-96fc-089d95fbf891', 'target': 'faces\\599541040\\457239304\\0.jpg2eb8a471-f2b1-400e-96fc-089d95fbf891', 'value': 2, 'dist': 200}, {'source': 599541040, 'target': '29dceecd-e182-4b31-b5fd-d493ea99aea7', 'value': 1, 'dist': 700}, {'source': '29dceecd-e182-4b31-b5fd-d493ea99aea7', 'target': 'faces\\599541040\\457239018\\0.jpg29dceecd-e182-4b31-b5fd-d493ea99aea7', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 1, 'dist': 700}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'target': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 1, 'dist': 700}, {'source': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'target': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 1, 'dist': 700}, {'source': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'target': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 1, 'dist': 700}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'target': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 1, 'dist': 700}, {'source': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'target': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'c3f22fd4-82bf-490f-903f-011438355acb', 'value': 1, 'dist': 700}, {'source': 'c3f22fd4-82bf-490f-903f-011438355acb', 'target': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'value': 2, 'dist': 200}, {'source': 605741977, 'target': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 1, 'dist': 700}, {'source': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'target': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'value': 2, 'dist': 200}, {'source': 606628914, 'target': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 1, 'dist': 700}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239018\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239741\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239765\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239767\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239770\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239771\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239782\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239784\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239785\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'target': 'faces\\606628914\\457239809\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'value': 2, 'dist': 200}, {'source': 606628914, 'target': '59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'value': 1, 'dist': 700}, {'source': '59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'target': 'faces\\606628914\\457239809\\2.jpg59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'value': 2, 'dist': 200}, {'source': 606628914, 'target': 'c63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'value': 1, 'dist': 700}, {'source': 'c63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'target': 'faces\\606628914\\457239809\\1.jpgc63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'value': 2, 'dist': 200}], 'nodes': [{'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 610296187, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239200\\0.jpg', 'name': 'Михаил Начманский'}, {'id': '12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239200\\0.jpg', 'name': '12a52d35-2cc6-4a2f-b0d3-9c27f5c69807'}, {'id': 'faces\\610296187\\457239200\\0.jpg12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'cluster': '12a52d35-2cc6-4a2f-b0d3-9c27f5c69807', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239200\\0.jpg'}, {'id': '4c378129-c182-4735-84df-9d2ac17a3317', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239195\\0.jpg', 'name': '4c378129-c182-4735-84df-9d2ac17a3317'}, {'id': 'faces\\610296187\\457239195\\0.jpg4c378129-c182-4735-84df-9d2ac17a3317', 'cluster': '4c378129-c182-4735-84df-9d2ac17a3317', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239195\\0.jpg'}, {'id': '52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239200\\1.jpg', 'name': '52e2bb26-a8ac-4601-8af4-3d1c063b3d2c'}, {'id': 'faces\\610296187\\457239200\\1.jpg52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'cluster': '52e2bb26-a8ac-4601-8af4-3d1c063b3d2c', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239200\\1.jpg'}, {'id': 'aa260cb0-41bc-4051-827b-dd697117a4aa', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239213\\0.jpg', 'name': 'aa260cb0-41bc-4051-827b-dd697117a4aa'}, {'id': 'faces\\610296187\\457239213\\0.jpgaa260cb0-41bc-4051-827b-dd697117a4aa', 'cluster': 'aa260cb0-41bc-4051-827b-dd697117a4aa', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239213\\0.jpg'}, {'id': 'c7896a2a-7f02-4e87-84f3-4d28b668f08d', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239216\\0.jpg', 'name': 'c7896a2a-7f02-4e87-84f3-4d28b668f08d'}, {'id': 'faces\\610296187\\457239216\\0.jpgc7896a2a-7f02-4e87-84f3-4d28b668f08d', 'cluster': 'c7896a2a-7f02-4e87-84f3-4d28b668f08d', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239216\\0.jpg'}, {'id': 'e0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239198\\0.jpg', 'name': 'e0c3bbe6-a9c8-48cf-a6a3-87a087e9269c'}, {'id': 'faces\\610296187\\457239198\\0.jpge0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'cluster': 'e0c3bbe6-a9c8-48cf-a6a3-87a087e9269c', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239198\\0.jpg'}, {'id': 'fd732948-0a6b-444c-ac2a-8d057f6110f6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\610296187\\457239237\\0.jpg', 'name': 'fd732948-0a6b-444c-ac2a-8d057f6110f6'}, {'id': 'faces\\610296187\\457239237\\0.jpgfd732948-0a6b-444c-ac2a-8d057f6110f6', 'cluster': 'fd732948-0a6b-444c-ac2a-8d057f6110f6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\610296187\\457239237\\0.jpg'}, {'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 602285270, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457239018\\0.jpg', 'name': 'Илья Самоваров'}, {'id': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457239018\\0.jpg', 'name': 'e23aac55-2152-4379-bb82-5370ea71851e'}, {'id': 'faces\\602285270\\457239018\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239018\\0.jpg'}, {'id': 'faces\\602285270\\457239064\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239064\\0.jpg'}, {'id': 'faces\\602285270\\457239165\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239165\\0.jpg'}, {'id': 'faces\\602285270\\457239779\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239779\\0.jpg'}, {'id': 'faces\\602285270\\457239875\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239875\\0.jpg'}, {'id': 'faces\\602285270\\457241750\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457241750\\0.jpg'}, {'id': 'faces\\602285270\\457241756\\0.jpge23aac55-2152-4379-bb82-5370ea71851e', 'cluster': 'e23aac55-2152-4379-bb82-5370ea71851e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457241756\\0.jpg'}, {'id': '1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457241753\\1.jpg', 'name': '1e6f0025-54b9-440c-aec3-af2b4c7b822b'}, {'id': 'faces\\602285270\\457241753\\1.jpg1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'cluster': '1e6f0025-54b9-440c-aec3-af2b4c7b822b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457241753\\1.jpg'}, {'id': '26ff04a0-6b09-4432-af4a-ee652a20514e', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457243049\\0.jpg', 'name': '26ff04a0-6b09-4432-af4a-ee652a20514e'}, {'id': 'faces\\602285270\\457243049\\0.jpg26ff04a0-6b09-4432-af4a-ee652a20514e', 'cluster': '26ff04a0-6b09-4432-af4a-ee652a20514e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457243049\\0.jpg'}, {'id': '2bd04756-3628-4e28-bc0d-f8418e062713', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457241734\\0.jpg', 'name': '2bd04756-3628-4e28-bc0d-f8418e062713'}, {'id': 'faces\\602285270\\457241734\\0.jpg2bd04756-3628-4e28-bc0d-f8418e062713', 'cluster': '2bd04756-3628-4e28-bc0d-f8418e062713', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457241734\\0.jpg'}, {'id': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457239188\\0.jpg', 'name': '2df9daeb-e139-4645-9f86-3d25f203d27a'}, {'id': 'faces\\602285270\\457239188\\0.jpg2df9daeb-e139-4645-9f86-3d25f203d27a', 'cluster': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239188\\0.jpg'}, {'id': 'faces\\602285270\\457239933\\0.jpg2df9daeb-e139-4645-9f86-3d25f203d27a', 'cluster': '2df9daeb-e139-4645-9f86-3d25f203d27a', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239933\\0.jpg'}, {'id': '3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457242296\\1.jpg', 'name': '3ba950f9-e45c-4f71-afee-336fff2eb4bb'}, {'id': 'faces\\602285270\\457242296\\1.jpg3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'cluster': '3ba950f9-e45c-4f71-afee-336fff2eb4bb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457242296\\1.jpg'}, {'id': '84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457241753\\0.jpg', 'name': '84223349-ee38-4b77-9b9a-a5c9ce9a06f7'}, {'id': 'faces\\602285270\\457241753\\0.jpg84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'cluster': '84223349-ee38-4b77-9b9a-a5c9ce9a06f7', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457241753\\0.jpg'}, {'id': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457239165\\1.jpg', 'name': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8'}, {'id': 'faces\\602285270\\457239165\\1.jpgabc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'cluster': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239165\\1.jpg'}, {'id': 'faces\\602285270\\457239875\\1.jpgabc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'cluster': 'abc2a12e-b687-4b84-9fc4-e0209b08b0d8', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239875\\1.jpg'}, {'id': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457239875\\2.jpg', 'name': 'e206f221-116d-44c1-8255-44f15e0e0ecc'}, {'id': 'faces\\602285270\\457239875\\2.jpge206f221-116d-44c1-8255-44f15e0e0ecc', 'cluster': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239875\\2.jpg'}, {'id': 'faces\\602285270\\457239875\\3.jpge206f221-116d-44c1-8255-44f15e0e0ecc', 'cluster': 'e206f221-116d-44c1-8255-44f15e0e0ecc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457239875\\3.jpg'}, {'id': 'efeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602285270\\457242296\\0.jpg', 'name': 'efeb0bdf-e71c-4bbf-b806-2188a23d4a1b'}, {'id': 'faces\\602285270\\457242296\\0.jpgefeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'cluster': 'efeb0bdf-e71c-4bbf-b806-2188a23d4a1b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602285270\\457242296\\0.jpg'}, {'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 598604644, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\598604644\\457239022\\0.jpg', 'name': 'George Alexandrov'}, {'id': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\598604644\\457239022\\0.jpg', 'name': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f'}, {'id': 'faces\\598604644\\457239022\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'cluster': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457239022\\0.jpg'}, {'id': 'faces\\598604644\\457239336\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'cluster': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457239336\\0.jpg'}, {'id': 'faces\\598604644\\457240505\\0.jpgb4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'cluster': 'b4c3d0e0-00ef-4e98-9300-cd3ddc93c47f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457240505\\0.jpg'}, {'id': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\598604644\\457239091\\0.jpg', 'name': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f'}, {'id': 'faces\\598604644\\457239091\\0.jpgbb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'cluster': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457239091\\0.jpg'}, {'id': 'faces\\598604644\\457239336\\1.jpgbb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'cluster': 'bb64739b-bada-4bc2-a5f1-64b787a3ee8f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457239336\\1.jpg'}, {'id': 'e3db5aac-308f-49df-9716-549415455aa8', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\598604644\\457239132\\0.jpg', 'name': 'e3db5aac-308f-49df-9716-549415455aa8'}, {'id': 'faces\\598604644\\457239132\\0.jpge3db5aac-308f-49df-9716-549415455aa8', 'cluster': 'e3db5aac-308f-49df-9716-549415455aa8', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\598604644\\457239132\\0.jpg'}, {'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 602507284, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457242963\\0.jpg', 'name': 'Эрик Атоян'}, {'id': 'c42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457242963\\0.jpg', 'name': 'c42df6c5-7e44-49b3-aa06-9e989f63d1d2'}, {'id': 'faces\\602507284\\457242963\\0.jpgc42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'cluster': 'c42df6c5-7e44-49b3-aa06-9e989f63d1d2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457242963\\0.jpg'}, {'id': '60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\2.jpg', 'name': '60c3a12d-2737-4b9e-81a6-5274c6a6c944'}, {'id': 'faces\\602507284\\457239887\\2.jpg60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'cluster': '60c3a12d-2737-4b9e-81a6-5274c6a6c944', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\2.jpg'}, {'id': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457240718\\0.jpg', 'name': '77524e7e-48ad-48e1-8929-2a8c12a97486'}, {'id': 'faces\\602507284\\457240718\\0.jpg77524e7e-48ad-48e1-8929-2a8c12a97486', 'cluster': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457240718\\0.jpg'}, {'id': 'faces\\602507284\\457240718\\1.jpg77524e7e-48ad-48e1-8929-2a8c12a97486', 'cluster': '77524e7e-48ad-48e1-8929-2a8c12a97486', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457240718\\1.jpg'}, {'id': '7970c907-af4f-44fb-9d05-cb4af0f528b5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\1.jpg', 'name': '7970c907-af4f-44fb-9d05-cb4af0f528b5'}, {'id': 'faces\\602507284\\457239887\\1.jpg7970c907-af4f-44fb-9d05-cb4af0f528b5', 'cluster': '7970c907-af4f-44fb-9d05-cb4af0f528b5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\1.jpg'}, {'id': 'bbde538d-5c94-47e3-8679-cd0e765cd97a', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\0.jpg', 'name': 'bbde538d-5c94-47e3-8679-cd0e765cd97a'}, {'id': 'faces\\602507284\\457239887\\0.jpgbbde538d-5c94-47e3-8679-cd0e765cd97a', 'cluster': 'bbde538d-5c94-47e3-8679-cd0e765cd97a', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\602507284\\457239887\\0.jpg'}, {'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 599541040, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\599541040\\457239304\\0.jpg', 'name': 'Даниил Сулимов'}, {'id': '2eb8a471-f2b1-400e-96fc-089d95fbf891', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\599541040\\457239304\\0.jpg', 'name': '2eb8a471-f2b1-400e-96fc-089d95fbf891'}, {'id': 'faces\\599541040\\457239304\\0.jpg2eb8a471-f2b1-400e-96fc-089d95fbf891', 'cluster': '2eb8a471-f2b1-400e-96fc-089d95fbf891', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\599541040\\457239304\\0.jpg'}, {'id': '29dceecd-e182-4b31-b5fd-d493ea99aea7', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\599541040\\457239018\\0.jpg', 'name': '29dceecd-e182-4b31-b5fd-d493ea99aea7'}, {'id': 'faces\\599541040\\457239018\\0.jpg29dceecd-e182-4b31-b5fd-d493ea99aea7', 'cluster': '29dceecd-e182-4b31-b5fd-d493ea99aea7', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\599541040\\457239018\\0.jpg'}, {'id': 605741977, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'Elizaveta Telyatnikova'}, {'id': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg', 'name': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf'}, {'id': 'faces\\605741977\\457239105\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239105\\0.jpg'}, {'id': 'faces\\605741977\\457239363\\0.jpga3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'cluster': 'a3e64ee3-c2f2-4f35-918e-2557f3a078cf', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239363\\0.jpg'}, {'id': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg', 'name': '08443a3a-6d82-4214-a7c4-7d608b5baf48'}, {'id': 'faces\\605741977\\457239564\\0.jpg08443a3a-6d82-4214-a7c4-7d608b5baf48', 'cluster': '08443a3a-6d82-4214-a7c4-7d608b5baf48', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239564\\0.jpg'}, {'id': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg', 'name': '14da1b26-55f4-48c9-b083-84f45d05b2a5'}, {'id': 'faces\\605741977\\457239529\\0.jpg14da1b26-55f4-48c9-b083-84f45d05b2a5', 'cluster': '14da1b26-55f4-48c9-b083-84f45d05b2a5', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239529\\0.jpg'}, {'id': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg', 'name': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6'}, {'id': 'faces\\605741977\\457239493\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239493\\0.jpg'}, {'id': 'faces\\605741977\\457239504\\0.jpg2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'cluster': '2527022d-6ec7-4c80-bd46-c6bef03b1ee6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239504\\0.jpg'}, {'id': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg', 'name': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6'}, {'id': 'faces\\605741977\\457239562\\0.jpg9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'cluster': '9c27320f-777b-4e4b-b8ae-0768c58d7cd6', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239562\\0.jpg'}, {'id': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg', 'name': 'c3f22fd4-82bf-490f-903f-011438355acb'}, {'id': 'faces\\605741977\\457239544\\0.jpgc3f22fd4-82bf-490f-903f-011438355acb', 'cluster': 'c3f22fd4-82bf-490f-903f-011438355acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239544\\0.jpg'}, {'id': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg', 'name': 'f6b6fdde-c046-40e5-8291-3c77a1032abc'}, {'id': 'faces\\605741977\\457239532\\0.jpgf6b6fdde-c046-40e5-8291-3c77a1032abc', 'cluster': 'f6b6fdde-c046-40e5-8291-3c77a1032abc', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\605741977\\457239532\\0.jpg'}, {'id': 606628914, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\606628914\\457239018\\0.jpg', 'name': 'Gita Fertich'}, {'id': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\606628914\\457239018\\0.jpg', 'name': '059aecc6-7280-4e22-96ac-030f9f8cdc99'}, {'id': 'faces\\606628914\\457239018\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239018\\0.jpg'}, {'id': 'faces\\606628914\\457239741\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239741\\0.jpg'}, {'id': 'faces\\606628914\\457239765\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239765\\0.jpg'}, {'id': 'faces\\606628914\\457239767\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239767\\0.jpg'}, {'id': 'faces\\606628914\\457239770\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239770\\0.jpg'}, {'id': 'faces\\606628914\\457239771\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239771\\0.jpg'}, {'id': 'faces\\606628914\\457239782\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239782\\0.jpg'}, {'id': 'faces\\606628914\\457239784\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239784\\0.jpg'}, {'id': 'faces\\606628914\\457239785\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239785\\0.jpg'}, {'id': 'faces\\606628914\\457239809\\0.jpg059aecc6-7280-4e22-96ac-030f9f8cdc99', 'cluster': '059aecc6-7280-4e22-96ac-030f9f8cdc99', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239809\\0.jpg'}, {'id': '59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\606628914\\457239809\\2.jpg', 'name': '59dfebf9-5b70-4da2-9c48-ad460b1206f4'}, {'id': 'faces\\606628914\\457239809\\2.jpg59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'cluster': '59dfebf9-5b70-4da2-9c48-ad460b1206f4', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239809\\2.jpg'}, {'id': 'c63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\606628914\\457239809\\1.jpg', 'name': 'c63ea08e-2bbe-43c2-a383-f342b99eb4a9'}, {'id': 'faces\\606628914\\457239809\\1.jpgc63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'cluster': 'c63ea08e-2bbe-43c2-a383-f342b99eb4a9', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\606628914\\457239809\\1.jpg'}], 'graph': []}
+var color = d3.scale.linear()
+	.domain([min_score, (min_score + max_score)/2, max_score])
+  	.range(["lime", "yellow", "#24a81f"]);
+
+var highlight_color = "blue";
+var highlight_trans = 0.1;
+  
+var size = d3.scale.pow().exponent(1)
+  	.domain([1, 100])
+  	.range([8, 24]);
+	
+	  var force = d3.layout.force()
+  	.charge(-2000) // Чем больше, тем больше притягиваются
+  	.size([w, h]);
+
+var default_node_color = "#24a81f", // Цвет узлов по умолчанию
+	default_link_color = "#888", // Цвет ребер по умолчанию
+	nominal_base_node_size = 8,
+	nominal_stroke = 1.5,
+	max_stroke = 4.5,
+	max_base_node_size = 36,
+	min_zoom = 0.1, // Нужно для масшабирования
+	max_zoom = 15, // Нужно для масшабирования
+	svg = d3.select("#graph").append("svg"),
+	zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom]),
+	g = svg.append("g"); // Элемент SVG
+svg.style("cursor","move"); // Задает стиль курсора
+
+// var graph = {"links": [{"source": 'C://my_site/my_site/static/faces//600701565į239017.jpg', "target": 'C://my_site/my_site/static/faces//600701565į239017 .jpg', "value": 1}], 
+// 	"nodes": [{"id": 'C://my_site/my_site/static/faces//600701565į239017 .jpg', "size": 10, "score": 1, "img":  "C://my_site/my_site/static/faces//600701565\457239019\1.jpg"}, {"id": 'C://my_site/my_site/static/faces//600701565į239017.jpg', "size": 10, "score": 1 ,"img":  "C://my_site/my_site/static/faces//600701565\457239019\1.jpg"}],
+//  "graph": []};
+ 
+ 	var linkedByIndex = {}; // Асс. массив {'1, 2' : true} для каждого ребра
+	graph.links.forEach((d) => {
+		linkedByIndex[d.source + "," + d.target] = true;
+	});
+
+	/**
+	* Функция принимает на вход индексы узлов и возвращает True, если связаны или один и тот же узел, иначе - False
+	* @param int Индекс первого узла
+	* @param int Индекс второго узла
+	* @return bool
+	*/
+	function isConnected(a, b) {
+	    return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+	}
+
+	/**
+	* Функция проверяет имеет ли узел связи
+	* @param int Индекс узла
+	* @return bool
+	*/
+
+	function hasConnections(a) {
+		for (var property in linkedByIndex) { // Цикл по ключам массива linkedByIndex
+			s = property.split(","); // Пара индексов связных улов
+			if ((s[0] == a.index || s[1] == a.index) && linkedByIndex[property]) return true;
+		}
+		return false;
+	}
+
+	// Это нужно, чтобы ребра можно было соединять по id, а не по index узла.
+	var nodeById = d3.map();
+	graph.nodes.forEach(function(node) {
+    	nodeById.set(node.id, node);
+  	});
+	graph.links.forEach(function(link) {
+    	link.source = nodeById.get(link.source);
+    	link.target = nodeById.get(link.target);
+  	});
+
+
+	force
+		.nodes(graph.nodes)
+	    .links(graph.links)
+	    .start();
+	
+	// force
+	// .linkDistance(function(d){console.log(d) });
+
+
+	var link = g.selectAll(".link")
+	    .data(graph.links)
+	    .enter().append("line")
+	    .attr("class", "link")
+		.style("stroke-width", nominal_stroke)
+		.style("stroke", (d) => { 
+			if (isNumber(d.score) && d.score >= 0) return color(d.score);
+			else return default_link_color;
+		});
+
+	var node = g.selectAll(".node")
+	    .data(graph.nodes)
+	    .enter().append("g")
+	    .attr("class", "node")
+	    .call(force.drag)
+
+	node.append("text")
+      .attr("dx", 50)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name });
+
+	// Зум на даблклик
+	node.on("dblclick.zoom", (d) => { d3.event.stopPropagation();
+		var dcx = (window.innerWidth / 2 - d.x * zoom.scale()),
+			dcy = (window.innerHeight / 2 - d.y * zoom.scale());
+		zoom.translate([dcx, dcy]);
+			g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+	});
+
+	var tocolor = "fill",
+		towhite = "stroke";
+	if (outline) {
+		tocolor = "stroke"
+		towhite = "fill"
+	}
+		
+	var circle = node.append("path")
+	  	.attr("d", d3.svg.symbol()
+	    	.size((d) => { return Math.PI*Math.pow(size(d.size) || nominal_base_node_size, 2); }) // Размер узла
+	    	.type("circle") // Тип узла (квадрат, круг и тд)
+	    )
+		.style(tocolor, (d) => { 
+			if (isNumber(d.score) && d.score >= 0) return color(d.score);
+			else return default_node_color; 
+		}) // Цвет узла (в JSON зависит от score)
+		.style("stroke-width", nominal_stroke) // Ширина границы (контура) элемента SVG
+		.style(towhite, "white");
+	
+	
+	circle.append("title").text(d => d.id) // Заголовок при наведении
+
+
+	var img = node.append("image")
+    .attr("xlink:href", function(d) {
+       return d.img;})
+    .attr("x", -8)
+    .attr("y", -8)
+    .attr("width", 50)
+    .attr("height", 50);
+
+	
+
+	node.on("mouseover", (d) => {set_highlight(d);}) // При наведении
+		.on("mousedown", (d) => { // При нажатии ЛКМ
+			d3.event.stopPropagation(); // При зажатии ЛКМ засчитать как один клик
+			focus_node = d;
+			set_focus(d)
+			info(d)
+			if (highlight_node === null) set_highlight(d)
+		})
+		.on("mouseout", (d) => { exit_highlight(); }); // При убирании курсора
+
+
+
+	// При отпускании ЛКМ сделать все узлы видимыми
+	d3.select(window).on("mouseup", () => { 
+		if (focus_node !== null) {
+			focus_node = null;
+			if (highlight_trans < 1) {
+				circle.style("opacity", 1);
+		  		link.style("opacity", 1);
+			}
+		}	
+		if (highlight_node === null) exit_highlight();
+	});
+
+	/**
+	* Функция убирает подсветку узлов
+	* @param int Индекс узла
+	*/
+	function exit_highlight() {
+		highlight_node = null;
+		if (focus_node === null) {
+			svg.style("cursor","move");
+			if (highlight_color!="white") {
+		  	  	circle.style(towhite, "white");
+			  	link.style("stroke", function(o) {return (isNumber(o.score) && o.score>=0)?color(o.score):default_link_color});
+			}	
+		}
+	}
+
+	/**
+	* Делает прозрачными все узлы, кроме выбранного и смежными с выбранным
+	* @param int Индекс узла
+	*/
+	function set_focus(d) {
+		if (highlight_trans < 1) {
+		    circle.style("opacity", function(o) {
+		        return isConnected(d, o) ? 1 : highlight_trans;
+		    });
+		    link.style("opacity", function(o) {
+		       	return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
+		    });
+		}
+	}
+
+	/**
+	* Функция подсвечивает выбранный узел и все связные с ним узлы
+	* @param int Индекс узла
+	*/
+	function set_highlight(d) {
+		svg.style("cursor","pointer");
+		if (focus_node !== null) d = focus_node;
+		highlight_node = d;
+
+		if (highlight_color != "white") {
+			circle.style(towhite, function(o) {
+	            return isConnected(d, o) ? highlight_color : "white";
+	        });
+	        link.style("stroke", function(o) {
+			    return o.source.index == d.index || o.target.index == d.index 
+			    	? highlight_color 
+			    	: ((isNumber(o.score) && o.score>=0)
+			    		? color(o.score)
+			    		: default_link_color);
+	        });
+		}
+	}
+	 	
+	// Зум (Это жесть НАДО РАЗОБРАТЬ!)
+	zoom.on("zoom", () => {
+	    var stroke = nominal_stroke;
+	    if (nominal_stroke * zoom.scale() > max_stroke) stroke = max_stroke / zoom.scale();
+	    link.style("stroke-width",stroke);
+	    circle.style("stroke-width",stroke);
+		var base_radius = nominal_base_node_size;
+	    if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size / zoom.scale();
+	    circle.attr("d", d3.svg.symbol()
+	        .size((d) => { return Math.PI*Math.pow(size(d.size)*base_radius/nominal_base_node_size || base_radius,2); })
+	        .type((d) => { return d.type; }))
+		
+		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	});
+	
+	svg.call(zoom);	  
+		
+	resize();
+
+	d3.select(window).on("resize", resize).on("keydown", keydown);
+	
+
+	force.on("tick", () => {
+	    node.attr("transform", (d) => { 
+			
+			return "translate(" + d.x + "," + d.y + ")"; });
+	  
+	    link.attr("x1", (d) => { return d.source.x; })
+	      	.attr("y1", (d) => { return d.source.y; })
+	      	.attr("x2", (d) => { return d.target.x; })
+	      	.attr("y2", (d) => { return d.target.y; });
+			
+	    node.attr("cx", (d) => { return d.x; })
+	      	.attr("cy", (d) => { return d.y; });
+	});
+	  
+	function resize() {
+	    var width = document.getElementById("graph").offsetWidth, 
+	    	height = document.getElementById("graph").offsetHeight;
+		svg.attr("width", width).attr("height", height);
+		force.size([force.size()[0]+(width-w)/zoom.scale(),force.size()[1]+(height-h)/zoom.scale()]).resume();
+	    w = width;
+		h = height;
+	}
+	
+	/**
+	* Функция делает невидимыми узлы при нажатии клавиш клавиатуры
+	* @param int Индекс узла
+	*/
+	function keydown() {
+		if (d3.event.keyCode==32) {force.stop();}
+		else if (d3.event.keyCode>=48 && d3.event.keyCode<=90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
+		  	switch (String.fromCharCode(d3.event.keyCode)) {
+			    case "C": keyc = !keyc; break;
+			    case "S": keys = !keys; break;
+				case "T": keyt = !keyt; break;
+				case "R": keyr = !keyr; break;
+			    case "X": keyx = !keyx; break;
+				case "D": keyd = !keyd; break;
+				case "L": keyl = !keyl; break;
+				case "M": keym = !keym; break;
+				case "H": keyh = !keyh; break;
+				case "1": key1 = !key1; break;
+				case "2": key2 = !key2; break;
+				case "3": key3 = !key3; break;
+				case "0": key0 = !key0; break;
+		  	}
+		  	link.style("display", (d) => {
+				var flag  = vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
+				linkedByIndex[d.source.index + "," + d.target.index] = flag;
+		        return flag ? "inline" : "none";
+		    });
+		    node.style("display", (d) => {
+				return (key0 || hasConnections(d)) && vis_by_node_score(d.score)
+					? "inline"
+					: "none";
+			});
+						
+			if (highlight_node !== null) {
+				if ((key0 || hasConnections(highlight_node)) && vis_by_node_score(highlight_node.score)) { 
+						if (focus_node!==null) set_focus(focus_node);
+						set_highlight(highlight_node);
+					}
+				else {exit_highlight();}
+			}
+		}	
+	}
+ 
+
+
+function vis_by_node_score(score) {
+	if (isNumber(score)) {
+		if (score>=0.666) return keyh;
+		else if (score>=0.333) return keym;
+		else if (score>=0) return keyl;
+	}
+	return true;
+}
+
+function vis_by_link_score(score) {
+	if (isNumber(score)) {
+		if (score >= 0.666) return key3;
+		else if (score >= 0.333) return key2;
+		else if (score >= 0) return key1;
+	}
+	return true;
+}
+
+function isNumber(n) {
+   	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function info(d) {
+		if (highlight_trans < 1) {
+		    circle.style("opacity", function(o) {
+		        document.getElementById('info3').innerHTML= d.img ;
+		    });
+		    link.style("opacity", function(o) {
+		       	document.getElementById('info2').innerHTML='Hello   2!';
+		    });
+		}
+	}
+
+</script>
+
+		</div>
+	</div>
+</body>
+</html>

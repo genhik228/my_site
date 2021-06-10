@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<link rel="icon" type="image/png" sizes="16x16" href="//search4faces.com/img/favicon/favicon-16x16.png">
+    <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+
+<!--	navigator-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<!--	navigator-->
+<style>
+
+.block-profile .panel, .block-profile.panel {
+ overflow: hidden;
+}
+.text-white {
+color: #fff;
+text-shadow: 1px 1px 2px #333;
+}
+.block-profile {
+margin-bottom: 20px;
+border-right:0;
+border-left: 1px solid #ddd;
+}
+.container {
+
+ 	margin-top: 10px ;
+
+}
+.profile-name {
+ display: table;
+ table-layout: fixed;
+ height: 100%;
+ width: 100%;
+ margin: 0;
+}
+.profile-name>[class*=col-] {
+ display: table-cell;
+ float: none;
+ table-layout: fixed;
+ vertical-align: middle;
+}
+.profile-images {
+ width: 128px!important;
+ height: 128px!important;
+}
+.list-group {
+line-height: 1.3;
+border-bottom:0
+}
+.list-group-item {
+background: #ECE9E6;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#adadad));
+background: -moz-linear-gradient(0% 0% 270deg,#fff, #adadad);
+}
+.panel-body {
+background: #f7f7f7;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#bababa));
+background: -moz-linear-gradient(0% 0% 270deg,#fff, #bababa);
+}
+
+<!--navi-->
+.navbar {
+ min-height: 80px;
+}
+.navbar-brand {
+ padding: 0 15px;
+ height: 80px;
+ line-height: 80px;
+}
+.navbar-toggle {
+ /* (80px - button height 34px) / 2 = 23px */
+ margin-top: 23px;
+ padding: 9px 10px !important;
+}
+@media (min-width: 768px) {
+ .navbar-nav > li > a {
+ /* (80px - line-height of 27px) / 2 = 26.5px */
+ padding-top: 26.5px;
+ padding-bottom: 26.5px;
+ line-height: 27px;
+ }
+}
+<!--navi-->
+</style>
+	 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static '/cinema/bootstrap/css/bootstrap.min.css' %}"  rel="stylesheet" >
+	<link  href="{% static '/cinema/bootstrap-fileinput/css/fileinput.min.css' %}"  rel="stylesheet" >
+	<link rel="stylesheet" src="{% static '/cinema/css/style.css' %}" >
+
+<link rel="icon" type="image/png" sizes="16x16" href="//search4faces.com/img/favicon/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>Object Detection</title>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+ 		<div class="navbar-header">
+ 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+ 			</button>
+ 			<a class="navbar-brand" href="{% url 'home' %}">
+				KIBER SEARCH
+			</a>
+ 		</div>
+ 		<div id="navbar" class="navbar-collapse collapse">
+ 			<ul class="nav navbar-nav">
+<!--				 <li >-->
+<!--					 <a href="{% url 'home' %}">Главная страница</a>-->
+<!--				 </li>-->
+				 <li>
+					 <a href="{% url 'search' %}">Поиск похожих фотографий</a>
+				 </li>
+				 <li>
+					 <a href="{% url 'history' %}">История поиска</a>
+				 </li>
+				<li>
+					 <a href="{% url 'photo_detection' %}">Распознование образов на изображениях</a>
+				 </li>
+				<li>
+					 <a href="{% url 'video_detection' %}">Распознование образов на видео</a>
+				 </li>
+				<li>
+					 <a href="{% url 'affiliate_user' %}">Построение социального графа</a>
+				 </li>
+<!--                <li>-->
+<!--                    <a class="btn btn-link btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse2" aria-expanded="false" aria-controls="nav-collapse2">Вход</a>-->
+<!--                </li>-->
+<!--              <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse2">-->
+<!--                             <form class="navbar-form navbar-right form-inline" role="form" method="post">-->
+<!--                                 {% csrf_token %}-->
+<!--                                <div class="form-group">-->
+<!--                                 <label class="sr-only" for="Email">Email</label>-->
+<!--                                    <input type="email" class="form-control" id="Email"  name="Email" placeholder="Email" autofocus required />-->
+<!--                                 </div>-->
+<!--                                 <div class="form-group">-->
+<!--                                 <label class="sr-only" for="Password">Password</label>-->
+<!--                                    <input type="password"  name="password" class="form-control" id="Password" placeholder="Password" required />-->
+<!--                                 </div>-->
+<!--                                 <button type="submit" class="btn btn-success">Вход</button>-->
+<!--                                 <a class="btn btn-success" href="{% url 'regist' %}" role="button">Регистрация</a>-->
+<!--                             </form>-->
+<!--                        </div>-->
+ 			</ul>
+		</div>
+	</div>
+</nav>
+
+ <div class="container">
+
+
+
+
+	<div class="jumbotron">
+        <h2>Поиск образов на видео</h2>
+            <p> Данный метод позволит изучить содержимое видео с помощью компьютерного зрения. Научимся определять на обработанных кадрах различные предметы,
+				такие как: автомобили, распознанных людей, животных и иные образы
+			</p>
+
+      </div>
+	<form class="form-horizontal" method="POST" enctype="multipart/form-data" >
+
+            {% csrf_token %}
+		<div class="form-group">
+                <label for="file" class="col-sm-2 control-label">Файл</label>
+                <div class="col-sm-8">
+                    <input type="file" name="file_obraz" id="file">
+                </div>
+            </div>
+	</form>
+
+
+
+
+
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Запуск видео</button>-->
+
+<!--<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-lg">-->
+<!--    <div class="modal-content">-->
+<!--		<div class="modal-header">-->
+<!--			<div class="modal-body">-->
+<!--				<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--						  <span aria-hidden="true">&times;</span>-->
+<!--						</button>-->
+			  <div class="embed-responsive embed-responsive-16by9">
+
+				<iframe   class="embed-responsive-item" src="{% static 'video_res/video_detection.mp4' %}" allowfullscreen="allowfullscreen"></iframe>
+			</div>
+
+
+<!--			</div>-->
+<!--			<div class="modal-footer">-->
+<!--				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>-->
+
+<!--			  </div>-->
+<!--		</div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+	 {% for info in photo %}
+	<img src="{% static info.path %}" alt="Image" alt="Image" class="img-thumbnail" alt="Cinque Terre">
+	 {% endfor %}
+	<p>
+	{% for info in obraz %}
+
+			{% load static %}
+
+			<img src="{% static info.path %}" alt="Image" alt="Image" class="img-thumbnail" alt="Cinque Terre">
+			<h3> {{ info.inf}} </h3>
+
+	{% endfor %}
+	</p>
+</div>
+<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="{% static '/cinema/bootstrap-fileinput/js/fileinput.min.js' %}"></script>
+	<script src="{% static '/cinema/bootstrap/js/bootstrap.min.js' %}"></script>
+
+	<script>
+$(function(){
+	$("#file").fileinput({
+		showCaption: false,
+		browseLabel: 'Выберите видео',
+		browseClass: 'btn btn-success',
+		showUpload: true,
+
+	});
+});
+	</script>
+</body>
+</html>

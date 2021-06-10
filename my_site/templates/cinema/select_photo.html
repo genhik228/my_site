@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<link rel="icon" type="image/png" sizes="16x16" href="//search4faces.com/img/favicon/favicon-16x16.png">
+    <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+
+<!--	navigator-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<!--	navigator-->
+<style>
+
+.block-profile .panel, .block-profile.panel {
+ overflow: hidden;
+}
+.text-white {
+color: #fff;
+text-shadow: 1px 1px 2px #333;
+}
+.block-profile {
+margin-bottom: 20px;
+border-right:0;
+border-left: 1px solid #ddd;
+}
+.container {
+
+ 	margin-top: 10px ;
+
+}
+.profile-name {
+ display: table;
+ table-layout: fixed;
+ height: 100%;
+ width: 100%;
+ margin: 0;
+}
+.profile-name>[class*=col-] {
+ display: table-cell;
+ float: none;
+ table-layout: fixed;
+ vertical-align: middle;
+}
+.profile-images {
+ width: 128px!important;
+ height: 128px!important;
+}
+.list-group {
+line-height: 1.3;
+border-bottom:0
+}
+.list-group-item {
+background: #ECE9E6;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#adadad));
+background: -moz-linear-gradient(0% 0% 270deg,#fff, #adadad);
+}
+.panel-body {
+background: #f7f7f7;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#bababa));
+background: -moz-linear-gradient(0% 0% 270deg,#fff, #bababa);
+}
+
+<!--navi-->
+.navbar {
+ min-height: 80px;
+}
+.navbar-brand {
+ padding: 0 15px;
+ height: 80px;
+ line-height: 80px;
+}
+.navbar-toggle {
+ /* (80px - button height 34px) / 2 = 23px */
+ margin-top: 23px;
+ padding: 9px 10px !important;
+}
+@media (min-width: 768px) {
+	 .navbar-nav > li > a {
+	 /* (80px - line-height of 27px) / 2 = 26.5px */
+	 padding-top: 26.5px;
+	 padding-bottom: 26.5px;
+	 line-height: 27px;
+	 }
+	}
+<!--navi-->
+
+</style>
+	 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static '/cinema/bootstrap/css/bootstrap.min.css' %}"  rel="stylesheet" >
+	<link  href="{% static '/cinema/bootstrap-fileinput/css/fileinput.min.css' %}"  rel="stylesheet" >
+	<link rel="stylesheet" src="{% static '/cinema/css/style.css' %}" >
+
+
+    <meta charset="UTF-8">
+	<link rel="icon" type="image/png" sizes="16x16" href="//search4faces.com/img/favicon/favicon-16x16.png">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>Search Result</title>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+ 		<div class="navbar-header">
+ 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+ 			</button>
+ 			<a class="navbar-brand" href="{% url 'home' %}">
+				KIBER SEARCH
+			</a>
+ 		</div>
+ 		<div id="navbar" class="navbar-collapse collapse">
+ 			<ul class="nav navbar-nav">
+<!--				 <li >-->
+<!--					 <a href="{% url 'home' %}">Главная страница</a>-->
+<!--				 </li>-->
+				 <li>
+					 <a href="{% url 'search' %}">Поиск похожих фотографий</a>
+				 </li>
+				 <li>
+					 <a href="{% url 'history' %}">История поиска</a>
+				 </li>
+				<li>
+					 <a href="{% url 'photo_detection' %}">Распознование образов на изображениях</a>
+				 </li>
+<li>
+					 <a href="{% url 'video_detection' %}">Распознование образов на видео</a>
+				 </li>
+				<li>
+					 <a href="{% url 'affiliate_user' %}">Построение социального графа</a>
+				 </li>
+<!--                <li>-->
+<!--                    <a class="btn btn-link btn-outline btn-circle"  data-toggle="collapse" href="#nav-collapse2" aria-expanded="false" aria-controls="nav-collapse2">Вход</a>-->
+<!--                </li>-->
+
+<!--                <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse2">-->
+<!--                             <form class="navbar-form navbar-right form-inline" role="form" method="post">-->
+<!--                                 {% csrf_token %}-->
+<!--                                <div class="form-group">-->
+<!--                                 <label class="sr-only" for="Email">Email</label>-->
+<!--                                    <input type="email" class="form-control" id="Email"  name="Email" placeholder="Email" autofocus required />-->
+<!--                                 </div>-->
+<!--                                 <div class="form-group">-->
+<!--                                 <label class="sr-only" for="Password">Password</label>-->
+<!--                                    <input type="password"  name="password" class="form-control" id="Password" placeholder="Password" required />-->
+<!--                                 </div>-->
+<!--                                 <button type="submit" class="btn btn-success">Вход</button>-->
+<!--                                 <a class="btn btn-success" href="{% url 'regist' %}" role="button">Регистрация</a>-->
+<!--                             </form>-->
+<!--                        </div>-->
+<!--				 <li class="dropdown">-->
+<!-- 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+<!--					<ul class="dropdown-menu">-->
+<!--						 <li><a href="#">Action</a></li>-->
+<!--						 <li><a href="#">Another action</a></li>-->
+<!--						 <li><a href="#">Something else here</a></li>-->
+<!--						 <li role="separator" class="divider"></li>-->
+<!--						 <li class="dropdown-header">Nav header</li>-->
+<!--						 <li><a href="#">Separated link</a></li>-->
+<!--						<li><a href="#">One more separated link</a></li>-->
+<!--					 </ul>-->
+<!-- 				</li>-->
+ 			</ul>
+		</div>
+	</div>
+</nav>
+
+
+
+
+
+
+	<div class="container">
+              <div class="row">
+                 <div class="col-md-12 text-center">
+                    <h2 style="color:red;">Выберите одну из предложенных фотографий</h2>
+                 </div>
+              </div>
+        </div>
+	<div class="container">
+	<form class="form-horizontal" name="test" method="post">
+		{% csrf_token %}
+		<div class="form-group">
+			<div class="row">
+				{% for info in select_photo %}
+				<div class="col-6 col-md-6">
+					<div class="panel block-profile" >
+						<div style="background-image: url('https://bootstraptema.ru/images/bg/bg-3.png')" class="panel-body text-center bg-center">
+							<div class="row profile-name">
+								<div class="col-xs-6 text-white">
+									{% load static %}
+									<img src="{% static info.path %}" alt="Image" class="img-thumbnail" alt="Cinque Terre">
+<!--										<img src="https://sun9-28.userapi.com/c857636/v857636717/63d81/XTHOsnUJjzY.jpg" alt="Image" class="img-thumbnail" alt="Cinque Terre">-->
+		<!-- 							<img src="https://bootstraptema.ru/snippets/block/2016/b3-blocks-users/rd1-400x400.jpg" alt="Image" class="img-thumbnail img-circle profile-images">-->
+								</div>
+							</div>
+							<button class="btn btn-primary" name="photo_id" value="{{ info.photo_id }}" type="submit" >Search</button>
+							<input type="hidden" name="user_id" value="{{ info.user_id }}">
+
+							<!--			<button class="btn btn-primary" name="photo_id" value="{{ info.value }}" type="submit" >Search</button>-->
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</form>
+	<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="{% static '/cinema/bootstrap-fileinput/js/fileinput.min.js' %}"></script>
+	<script src="{% static '/cinema/bootstrap/js/bootstrap.min.js' %}"></script>
+
+</div>
+
+<!--<div class="container">-->
+<!--	<div class="page-header">-->
+<!--        <h3>Ваш запрос</h3>-->
+<!--    </div>-->
+<!--	<div class="row">-->
+<!--&lt;!&ndash;		<div class=".col-6 .col-md-4">&ndash;&gt;-->
+
+<!-- 		<div class="col-6 col-md-6">-->
+<!-- 			<div class="panel block-profile">-->
+<!--				<div style="background-image: url('https://bootstraptema.ru/images/bg/bg-3.png')" class="panel-body text-center bg-center">-->
+<!-- 					<div class="row profile-name">-->
+<!-- 						<div class="col-xs-6 text-white">-->
+<!--							{% load static %}-->
+<!--								<img src="" alt="Image" class="img-thumbnail" alt="Cinque Terre">-->
+<!--&lt;!&ndash; 							<img src="https://bootstraptema.ru/snippets/block/2016/b3-blocks-users/rd1-400x400.jpg" alt="Image" class="img-thumbnail img-circle profile-images">&ndash;&gt;-->
+<!-- 						</div>-->
+<!-- 					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--	</div>-->
+<!--</div>-->
+
+
+
+
+</body>
+</html>

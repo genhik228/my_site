@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="16x16" href="//search4faces.com/img/favicon/favicon-16x16.png">
+<title>Социальный граф</title>
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="js_lib/d3.v6.js"></script>
+<script src="js_lib/d3.v3.min.js"></script>
+<style>
+.link {
+stroke: rgb(15, 5, 151) ;
+}
+div {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+div {
+width: 170vw;
+height: 150vh;
+overflow-x:hidden;
+word-break: break-all;
+
+}
+.node text {
+pointer-events: none;
+font: 25px sans-serif;
+}
+    .container {
+        position:relative;
+        width:13%;/*half the width of the whole page*/
+        height:20%;
+        margin:left; /*center the whole thing*/
+    }
+    
+    .relative_container {
+        padding-bottom:5%;
+        position:relative;
+        float:left;
+        width:100%;
+        height:1%;
+    }
+    .node.fixed {
+  fill: #f00;
+}
+   
+</style>
+<body>
+<form class="form-horizontal" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+<div id="graph" class="section">
+		
+</div>
+<div class='container'>
+    <div class='relative_container' id="info1" style='background-color:rgb(236, 228, 228);'> </div>
+    <div class='relative_container' id="info2" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' id="info3" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' id="info4" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' id="info5" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' id="info9" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' id="info8" style='background-color:rgb(236, 228, 228);'></div>
+		
+    <div class='relative_container' class="col-sm-offset col-sm-8" id="info6" style='background-color:rgb(236, 228, 228);'></div>
+    <div class='relative_container' class="col-sm-offset col-sm-8" id="info7" style='background-color:rgb(236, 228, 228);'></div>
+    
+</div>
+</form>
+<script>
+
+var w = document.getElementById("graph").offsetWidth,
+	h = document.getElementById("graph").offsetHeight;
+
+var keyc = true, keys = true, keyt = true, keyr = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
+
+var focus_node = null, highlight_node = null;
+
+var text_center = false;
+var outline = false;
+
+var min_score = 0;
+var max_score = 2;
+var graph = {'links': [{'source': 585726671, 'target': '1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '1'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '2'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239032\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '3'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239033\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '4'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239034\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '5'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239035\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '6'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239036\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '7'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239037\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '8'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239038\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '9'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239039\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '10'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239040\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '11'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239041\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '12'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239042\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '13'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239043\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '14'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239044\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '15'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239046\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '16'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239047\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '17'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239048\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '18'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239049\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '19'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239050\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '20'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239051\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '21'}, {'source': 585726671, 'target': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '22'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239047\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '23'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239048\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '24'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239049\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '25'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239050\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '26'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239051\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '27'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239052\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '28'}, {'source': 600701565, 'target': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '30'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239017\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '31'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239018\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '32'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239019\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '33'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239020\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '34'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239021\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '35'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239022\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '36'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239023\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '37'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239024\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '38'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239025\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '39'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239026\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '40'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239027\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '41'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239028\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '42'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239029\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '43'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239031\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '44'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239032\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '45'}, {'source': 600701565, 'target': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '46'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239017\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '47'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239018\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '48'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239019\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '49'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239020\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '50'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239021\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '51'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239033\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '52'}, {'source': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\600701565\\457239017\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 3, 'dist': 25, 'type_link': '1 по фото', 'number_link': '54'}, {'source': 'faces\\600701565\\457239017\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\585726671\\457239047\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 3, 'dist': 25, 'type_link': '1 по фото', 'number_link': '55'}, {'source': 585726671, 'target': '1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '56'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '57'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239032\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '58'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239033\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '59'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239034\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '60'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239035\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '61'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239036\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '62'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239037\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '63'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239038\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '64'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239039\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '65'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239040\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '66'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239041\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '67'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239042\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '68'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239043\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '69'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239044\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '70'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239046\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '71'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239047\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '72'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239048\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '73'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239049\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '74'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239050\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '75'}, {'source': '1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\585726671\\457239051\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '76'}, {'source': 585726671, 'target': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '77'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239047\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '78'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239048\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '79'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239049\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '80'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239050\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '81'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239051\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '82'}, {'source': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'target': 'faces\\585726671\\457239052\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '83'}, {'source': 178052366, 'target': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '85'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\456255097\\3.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '86'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\456255098\\1.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '87'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\457255627\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '88'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\457257343\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '89'}, {'source': 178052366, 'target': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '90'}, {'source': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'target': 'faces\\178052366\\456255004\\0.jpg28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '91'}, {'source': 178052366, 'target': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '92'}, {'source': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'target': 'faces\\178052366\\457255853\\0.jpg40e938a5-7085-49a2-aa8e-01f7136195c7', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '93'}, {'source': 178052366, 'target': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '94'}, {'source': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'target': 'faces\\178052366\\456255097\\2.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '95'}, {'source': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'target': 'faces\\178052366\\456255098\\0.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '96'}, {'source': 178052366, 'target': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '97'}, {'source': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'target': 'faces\\178052366\\457255484\\0.jpg81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '98'}, {'source': 178052366, 'target': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '99'}, {'source': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'target': 'faces\\178052366\\457255987\\0.jpgb33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '100'}, {'source': 178052366, 'target': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '101'}, {'source': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'target': 'faces\\178052366\\457255837\\0.jpgbaeb7aef-083d-4ab9-ae50-50dd58250009', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '102'}, {'source': 178052366, 'target': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '103'}, {'source': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'target': 'faces\\178052366\\456255097\\0.jpgc4bc4614-4c76-457d-af8e-7b825e657e50', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '104'}, {'source': 178052366, 'target': 'ef61c529-2927-412f-b316-d92575630acb', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '105'}, {'source': 'ef61c529-2927-412f-b316-d92575630acb', 'target': 'faces\\178052366\\457255539\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '106'}, {'source': 'ef61c529-2927-412f-b316-d92575630acb', 'target': 'faces\\178052366\\457257978\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '107'}, {'source': 178052366, 'target': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '108'}, {'source': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'target': 'faces\\178052366\\456255097\\1.jpgf74e88cb-770d-404b-80d9-17f5dbced22e', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '109'}, {'source': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\178052366\\457255484\\0.jpg81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'color_link': 4, 'dist': 25, 'type_link': '2 по фото', 'number_link': '111'}, {'source': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'target': 'faces\\178052366\\457255987\\0.jpgb33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'color_link': 4, 'dist': 25, 'type_link': '2 по фото', 'number_link': '112'}, {'source': 600701565, 'target': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '113'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239017\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '114'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239018\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '115'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239019\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '116'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239020\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '117'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239021\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '118'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239022\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '119'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239023\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '120'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239024\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '121'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239025\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '122'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239026\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '123'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239027\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '124'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239028\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '125'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239029\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '126'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239031\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '127'}, {'source': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'target': 'faces\\600701565\\457239032\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '128'}, {'source': 600701565, 'target': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '129'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239017\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '130'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239018\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '131'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239019\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '132'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239020\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '133'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239021\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '134'}, {'source': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'target': 'faces\\600701565\\457239033\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри Класса', 'number_link': '135'}, {'source': 178052366, 'target': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '137'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\456255097\\3.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '138'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\456255098\\1.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '139'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\457255627\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '140'}, {'source': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'target': 'faces\\178052366\\457257343\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '141'}, {'source': 178052366, 'target': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '142'}, {'source': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'target': 'faces\\178052366\\456255004\\0.jpg28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '143'}, {'source': 178052366, 'target': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '144'}, {'source': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'target': 'faces\\178052366\\457255853\\0.jpg40e938a5-7085-49a2-aa8e-01f7136195c7', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '145'}, {'source': 178052366, 'target': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '146'}, {'source': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'target': 'faces\\178052366\\456255097\\2.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '147'}, {'source': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'target': 'faces\\178052366\\456255098\\0.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '148'}, {'source': 178052366, 'target': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '149'}, {'source': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'target': 'faces\\178052366\\457255484\\0.jpg81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '150'}, {'source': 178052366, 'target': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '151'}, {'source': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'target': 'faces\\178052366\\457255987\\0.jpgb33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '152'}, {'source': 178052366, 'target': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '153'}, {'source': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'target': 'faces\\178052366\\457255837\\0.jpgbaeb7aef-083d-4ab9-ae50-50dd58250009', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '154'}, {'source': 178052366, 'target': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '155'}, {'source': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'target': 'faces\\178052366\\456255097\\0.jpgc4bc4614-4c76-457d-af8e-7b825e657e50', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '156'}, {'source': 178052366, 'target': 'ef61c529-2927-412f-b316-d92575630acb', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '157'}, {'source': 'ef61c529-2927-412f-b316-d92575630acb', 'target': 'faces\\178052366\\457255539\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '158'}, {'source': 'ef61c529-2927-412f-b316-d92575630acb', 'target': 'faces\\178052366\\457257978\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '159'}, {'source': 178052366, 'target': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'color_link': 1, 'dist': 75, 'type_link': 'Владельц-Класс', 'number_link': '160'}, {'source': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'target': 'faces\\178052366\\456255097\\1.jpgf74e88cb-770d-404b-80d9-17f5dbced22e', 'color_link': 2, 'dist': 40, 'type_link': 'Внутри класса', 'number_link': '161'}], 'nodes': [{'id': 585726671, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\585726671\\457239031\\0.jpg', 'name_full': 'Алиса Френдлих', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\585726671\\457239031\\0.jpg', 'name': '1dd36a70-0969-490d-af33-17d056ed7b89', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239031\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239031\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239032\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239032\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239033\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239033\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239034\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239034\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239035\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239035\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239036\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239036\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239037\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239037\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239038\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239038\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239039\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239039\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239040\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239040\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239041\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239041\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239042\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239042\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239043\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239043\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239044\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239044\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239046\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239046\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239047\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239047\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239048\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239048\\1.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239049\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239049\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239050\\1.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239050\\1.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'faces\\585726671\\457239051\\0.jpg1dd36a70-0969-490d-af33-17d056ed7b89', 'cluster': '1dd36a70-0969-490d-af33-17d056ed7b89', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239051\\0.jpg', 'sur': 'Алиса Френдлих', 'city': 'Россия,Екатеринбург', 'gender': 'F', 'number_class': 1, 'vk': 'https://vk.com/id585726671'}, {'id': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\585726671\\457239047\\1.jpg', 'name': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'number_class': 2}, {'id': 'faces\\585726671\\457239047\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239047\\1.jpg', 'number_class': 2}, {'id': 'faces\\585726671\\457239048\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239048\\0.jpg', 'number_class': 2}, {'id': 'faces\\585726671\\457239049\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239049\\1.jpg', 'number_class': 2}, {'id': 'faces\\585726671\\457239050\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239050\\0.jpg', 'number_class': 2}, {'id': 'faces\\585726671\\457239051\\1.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239051\\1.jpg', 'number_class': 2}, {'id': 'faces\\585726671\\457239052\\0.jpgde8441fe-a7ef-49b4-b13c-a74631b9a18b', 'cluster': 'de8441fe-a7ef-49b4-b13c-a74631b9a18b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\585726671\\457239052\\0.jpg', 'number_class': 2}, {'id': 600701565, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\600701565\\457239017\\1.jpg', 'name_full': 'Рома Пупкин', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\600701565\\457239017\\1.jpg', 'name': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239017\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239017\\1.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239018\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239018\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239019\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239019\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239020\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239020\\1.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239021\\1.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239021\\1.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239022\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239022\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239023\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239023\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239024\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239024\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239025\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239025\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239026\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239026\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239027\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239027\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239028\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239028\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239029\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239029\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239031\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239031\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': 'faces\\600701565\\457239032\\0.jpg75e8ea55-fed5-4b7c-956c-596f1de39db2', 'cluster': '75e8ea55-fed5-4b7c-956c-596f1de39db2', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239032\\0.jpg', 'sur': 'Рома Пупкин', 'city': 'Россия,Екатеринбург', 'gender': 'M', 'number_class': 1, 'vk': 'https://vk.com/id600701565'}, {'id': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\600701565\\457239017\\0.jpg', 'name': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'number_class': 2}, {'id': 'faces\\600701565\\457239017\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239017\\0.jpg', 'number_class': 2}, {'id': 'faces\\600701565\\457239018\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239018\\1.jpg', 'number_class': 2}, {'id': 'faces\\600701565\\457239019\\1.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239019\\1.jpg', 'number_class': 2}, {'id': 'faces\\600701565\\457239020\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239020\\0.jpg', 'number_class': 2}, {'id': 'faces\\600701565\\457239021\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239021\\0.jpg', 'number_class': 2}, {'id': 'faces\\600701565\\457239033\\0.jpg7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'cluster': '7368673c-5491-4c35-9c75-7e4ebd69a3ea', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\600701565\\457239033\\0.jpg', 'number_class': 2}, {'id': 178052366, 'size': 100, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\3.jpg', 'name_full': 'Ангелина Трухачева', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\3.jpg', 'name': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': 'faces\\178052366\\456255097\\3.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'cluster': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\3.jpg', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': 'faces\\178052366\\456255098\\1.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'cluster': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255098\\1.jpg', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': 'faces\\178052366\\457255627\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'cluster': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255627\\0.jpg', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': 'faces\\178052366\\457257343\\0.jpg752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'cluster': '752b96b8-06c6-426e-9e2b-0eabdf7a3d7b', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457257343\\0.jpg', 'sur': 'Ангелина Трухачева', 'city': 'Россия,Москва', 'gender': 'F', 'number_class': 4, 'vk': 'https://vk.com/id178052366'}, {'id': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255004\\0.jpg', 'name': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'number_class': 5}, {'id': 'faces\\178052366\\456255004\\0.jpg28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'cluster': '28ab60aa-98bd-4a94-8fd8-b75f812e4ffe', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255004\\0.jpg', 'number_class': 5}, {'id': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\457255853\\0.jpg', 'name': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'number_class': 6}, {'id': 'faces\\178052366\\457255853\\0.jpg40e938a5-7085-49a2-aa8e-01f7136195c7', 'cluster': '40e938a5-7085-49a2-aa8e-01f7136195c7', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255853\\0.jpg', 'number_class': 6}, {'id': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\2.jpg', 'name': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'number_class': 7}, {'id': 'faces\\178052366\\456255097\\2.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'cluster': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\2.jpg', 'number_class': 7}, {'id': 'faces\\178052366\\456255098\\0.jpg46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'cluster': '46fc3b63-4647-4c53-81c1-b6743cf79b1f', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255098\\0.jpg', 'number_class': 7}, {'id': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\457255484\\0.jpg', 'name': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'number_class': 8}, {'id': 'faces\\178052366\\457255484\\0.jpg81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'cluster': '81abcf0b-042b-46f2-a63e-d02bf3bc9ba0', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255484\\0.jpg', 'number_class': 8}, {'id': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\457255987\\0.jpg', 'name': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'number_class': 9}, {'id': 'faces\\178052366\\457255987\\0.jpgb33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'cluster': 'b33a56cc-03ed-41b1-a4c8-488d6a9e1f7e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255987\\0.jpg', 'number_class': 9}, {'id': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\457255837\\0.jpg', 'name': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'number_class': 10}, {'id': 'faces\\178052366\\457255837\\0.jpgbaeb7aef-083d-4ab9-ae50-50dd58250009', 'cluster': 'baeb7aef-083d-4ab9-ae50-50dd58250009', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255837\\0.jpg', 'number_class': 10}, {'id': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\0.jpg', 'name': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'number_class': 11}, {'id': 'faces\\178052366\\456255097\\0.jpgc4bc4614-4c76-457d-af8e-7b825e657e50', 'cluster': 'c4bc4614-4c76-457d-af8e-7b825e657e50', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\0.jpg', 'number_class': 11}, {'id': 'ef61c529-2927-412f-b316-d92575630acb', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\457255539\\0.jpg', 'name': 'ef61c529-2927-412f-b316-d92575630acb', 'number_class': 12}, {'id': 'faces\\178052366\\457255539\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'cluster': 'ef61c529-2927-412f-b316-d92575630acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457255539\\0.jpg', 'number_class': 12}, {'id': 'faces\\178052366\\457257978\\0.jpgef61c529-2927-412f-b316-d92575630acb', 'cluster': 'ef61c529-2927-412f-b316-d92575630acb', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\457257978\\0.jpg', 'number_class': 12}, {'id': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'size': 50, 'score': 1, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\1.jpg', 'name': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'number_class': 13}, {'id': 'faces\\178052366\\456255097\\1.jpgf74e88cb-770d-404b-80d9-17f5dbced22e', 'cluster': 'f74e88cb-770d-404b-80d9-17f5dbced22e', 'size': 10, 'score': 2, 'img': 'http://localhost:8000/static/faces\\178052366\\456255097\\1.jpg', 'number_class': 13}], 'graph': []}
+var color = d3.scale.linear()
+	.domain([1, 2, 3, 4, 5])
+  	.range(["red", "black", "yellow",'pink', 'green']);
+var highlight_color = "blue";
+var highlight_trans = 0.1;
+
+var size = d3.scale.pow().exponent(1)
+  	.domain([1, 100])
+  	.range([8, 24]);
+	
+	  var force = d3.layout.force()
+  	.charge(-7000) // Чем больше, тем больше притягиваются
+  	.size([w, h]);
+
+var default_node_color = "pink", // Цвет узлов по умолчанию
+	default_link_color = "black", // Цвет ребер по умолчанию
+	nominal_base_node_size = 8,
+	nominal_stroke = 10.5,
+	max_stroke = 4.5,
+	max_base_node_size = 36,
+	min_zoom = 0.1, // Нужно для масшабирования
+	max_zoom = 15, // Нужно для масшабирования
+	svg = d3.select("#graph").append("svg"),
+	zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom]),
+	g = svg.append("g"); // Элемент SVG
+	svg.style("cursor","pointer"); // Задает стиль курсора
+ 	var linkedByIndex = {}; // Асс. массив {'1, 2' : true} для каждого ребра
+	graph.links.forEach((d) => {
+		linkedByIndex[d.source + "," + d.target] = true;
+	});
+	console.log(linkedByIndex)
+	/**
+	* Функция принимает на вход индексы узлов и возвращает True, если связаны или один и тот же узел, иначе - False
+	* @param int Индекс первого узла
+	* @param int Индекс второго узла
+	* @return bool
+	*/
+	function isConnected(a, b) {
+	    return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+	}
+
+	/**
+	* Функция проверяет имеет ли узел связи
+	* @param int Индекс узла
+	* @return bool
+	*/
+
+	function hasConnections(a) {
+		for (var property in linkedByIndex) { // Цикл по ключам массива linkedByIndex
+			s = property.split(","); // Пара индексов связных улов
+			if ((s[0] == a.index || s[1] == a.index) && linkedByIndex[property]) return true;
+		}
+		return false;
+	}
+
+	// Это нужно, чтобы ребра можно было соединять по id, а не по index узла.
+	var nodeById = d3.map();
+	graph.nodes.forEach(function(node) {
+    	nodeById.set(node.id, node);
+  	});
+	graph.links.forEach(function(link) {
+    	link.source = nodeById.get(link.source);
+    	link.target = nodeById.get(link.target);
+  	});
+
+
+	force
+		.nodes(graph.nodes)
+	    .links(graph.links)
+	    .start();
+	
+	// force
+	// .linkDistance(function(d){console.log(d) });
+
+
+	var link = g.selectAll(".link")
+	    .data(graph.links)
+	    .enter().append("line")
+	    .attr("class", "link")
+		.style("stroke-width", nominal_stroke)
+		.style("stroke", (d) => { 
+			
+			if (d.color_link == 1) return color(d.color_link)
+					else if(d.color_link == 2) return color(d.color_link);
+					else if(d.color_link == 3) return color(d.color_link);
+					else if (d.color_link == 4) return color(d.color_link)
+					else if (d.color_link == 5) return color(d.color_link);
+		});
+		
+	link.on("click", function(d){
+		
+		info_link(d)
+		console.log(d)
+		link.style("stroke", function(o) { if (d.number_link == o.number_link) return 'orange';})
+		link.style("display", function(o) {if (d.number_link == o.number_link) return  "none"})
+	})
+	
+	
+	var node = g.selectAll(".node")
+	    .data(graph.nodes)
+	    .enter().append("g")
+	    .attr("class", "node")
+	    .call(force.drag)
+
+	node.append("text")
+      .attr("dx", 50)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name_full });
+	
+	link.style("display", (d) => {
+				
+				
+		var flag  = vis_by_node_score(d.value) && vis_by_node_score(d.value) && vis_by_link_score(d.value);
+		
+		linkedByIndex[d.source.index + "," + d.target.index] = flag;
+		return flag ? "inline" : "none";
+	});
+	// Зум на даблклик
+	node.on("dblclick.zoom", (d) => { d3.event.stopPropagation();
+		var dcx = (window.innerWidth / 2 - d.x * zoom.scale()),
+			dcy = (window.innerHeight / 2 - d.y * zoom.scale());
+		zoom.translate([dcx, dcy]);
+			g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+	});
+
+	var tocolor = "fill",
+		towhite = "stroke";
+	if (outline) {
+		tocolor = "stroke"
+		towhite = "fill"
+	}
+		var drag = force.drag()
+    .on("dragstart", dragstart);
+	var circle = node.append("path")
+	  	.attr("d", d3.svg.symbol()
+	    	.size((d) => { return Math.PI*Math.pow(size(d.size) || nominal_base_node_size, 2); }) // Размер узла
+	    	.type("circle") // Тип узла (квадрат, круг и тд)
+	    )
+		.style(tocolor, (d) => { 
+			if (d.color_link == 1) return color(d.color_link)
+            else if(d.color_link == 2) return color(d.color_link);
+            else if(d.color_link == 3) return color(d.color_link);
+            else if (d.color_link == 4) return color(d.color_link)
+            else if (d.color_link == 5) return color(d.color_link);
+		}) // Цвет узла (в JSON зависит от score)
+		.style("stroke-width", nominal_stroke) // Ширина границы (контура) элемента SVG
+		.style(towhite, "white");
+		
+	
+	circle.append("title").text(d => d.id) // Заголовок при наведении
+
+
+	var img = node.append("image")
+    .attr("xlink:href", function(d) {
+       return d.img;})
+    .attr("x", -25)
+    .attr("y", -25)
+    .attr("width", 50)
+    .attr("height", 50);
+
+	
+
+	node.on("mouseover", (d) => {set_highlight(d);}) // При наведении
+		.on("mousedown", (d) => { // При нажатии ЛКМ
+			d3.event.stopPropagation(); // При зажатии ЛКМ засчитать как один клик
+			focus_node = d;
+			set_focus(d)
+			info(d)
+			if (highlight_node === null) set_highlight(d)
+		})
+		.on("mouseout", (d) => { exit_highlight(); }); // При убирании курсора
+
+	
+
+	// При отпускании ЛКМ сделать все узлы видимыми
+	d3.select(window).on("mouseup", () => { 
+		if (focus_node !== null) {
+			focus_node = null;
+			if (highlight_trans < 1) {
+				
+				circle.style("opacity", 1);
+				
+		  		link.style("opacity", 1);
+			}
+		}
+		
+		console.log('111')
+		
+		if (highlight_node === null) exit_highlight();
+	});
+
+	/**
+	* Функция убирает подсветку узлов
+	* @param int Индекс узла
+	*/
+	function exit_highlight() {
+		highlight_node = null;
+		if (focus_node === null) {
+			svg.style("cursor","pointer");
+			if (highlight_color!="white") {
+		  	  	circle.style(towhite, "white");
+			  	link.style("stroke", function(d) {
+					
+					if (d.color_link == 1) return color(d.color_link)
+					else if(d.color_link == 2) return color(d.color_link);
+					else if(d.color_link == 3) return color(d.color_link);
+					else if (d.color_link == 4) return color(d.color_link)
+					else if (d.color_link == 5) return color(d.color_link);
+				
+				});
+				
+			}	
+		}
+	}
+
+	/**
+	* Делает прозрачными все узлы, кроме выбранного и смежными с выбранным
+	* @param int Индекс узла
+	*/
+	function set_focus(d) {
+		if (highlight_trans < 1) {
+		    circle.style("opacity", function(o) {
+		        return isConnected(d, o) ? 1 : highlight_trans;
+		    });
+		    link.style("opacity", function(o) {
+		       	return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
+		    });
+		}
+	}
+
+
+
+	/**
+	* Функция подсвечивает выбранный узел и все связные с ним узлы
+	* @param int Индекс узла
+	*/
+	function set_highlight(d) {
+		svg.style("cursor","pointer");
+		if (focus_node !== null) d = focus_node;
+		highlight_node = d;
+
+		if (highlight_color != "white") {
+			circle.style(towhite, function(o) {
+				console.log('1')
+	            return isConnected(d, o) ? highlight_color : "white";
+	        });
+	        link.style("stroke", function(o) {
+			
+			if (o.source.index == d.index || o.target.index == d.index ) {
+					console.log('2')
+					return highlight_color
+				}
+			else {
+				
+				if (o.color_link == 1) return color(o.color_link)
+				else if(o.color_link == 2) return color(o.color_link);
+				else if(o.color_link == 3) return color(o.color_link);
+				else if (o.color_link == 4) return color(o.color_link)
+				else if (o.color_link == 5) return color(o.color_link);
+				}
+				
+			});
+			  /* 
+			    return o.source.index == d.index || o.target.index == d.index 
+			    	? highlight_color 
+			    	: ((isNumber(o.score) && o.score>=0)
+			    		? color(o.score)
+			    		: default_link_color);
+			  
+	        });
+			*/
+		}
+	}
+	 	
+	// Зум (Это жесть НАДО РАЗОБРАТЬ!)
+	zoom.on("zoom", () => {
+	    var stroke = nominal_stroke;
+	    if (nominal_stroke * zoom.scale() > max_stroke) stroke = max_stroke / zoom.scale();
+	    link.style("stroke-width",stroke);
+	    circle.style("stroke-width",stroke);
+		var base_radius = nominal_base_node_size;
+	    if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size / zoom.scale();
+	    circle.attr("d", d3.svg.symbol()
+	        .size((d) => { return Math.PI*Math.pow(size(d.size)*base_radius/nominal_base_node_size || base_radius,2); })
+	        .type((d) => { return d.type; }))
+		
+		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	});
+	
+	svg.call(zoom);	  
+		
+	resize();
+
+	d3.select(window).on("resize", resize).on("keydown", keydown);
+	
+
+	force.on("tick", () => {
+	    node.attr("transform", (d) => { 
+			
+			return "translate(" + d.x + "," + d.y + ")"; });
+	  
+	    link.attr("x1", (d) => { return d.source.x; })
+	      	.attr("y1", (d) => { return d.source.y; })
+	      	.attr("x2", (d) => { return d.target.x; })
+	      	.attr("y2", (d) => { return d.target.y; });
+			
+	    node.attr("cx", (d) => { return d.x; })
+	      	.attr("cy", (d) => { return d.y; });
+	});
+	  
+	function resize() {
+	    var width = document.getElementById("graph").offsetWidth, 
+	    	height = document.getElementById("graph").offsetHeight;
+		svg.attr("width", width).attr("height", height);
+		force.size([force.size()[0]+(width-w)/zoom.scale(),force.size()[1]+(height-h)/zoom.scale()]).resume();
+	    w = width;
+		h = height;
+	}
+	function dblclick(d) {
+  d3.select(this).classed("fixed", d.fixed = false);
+}
+	/**
+	* Функция делает невидимыми узлы при нажатии клавиш клавиатуры
+	* @param int Индекс узла
+	*/
+	function keydown() {
+		if (d3.event.keyCode==32) {force.stop();}
+		else if (d3.event.keyCode>=48 && d3.event.keyCode<=90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
+		  	switch (String.fromCharCode(d3.event.keyCode)) {
+			    case "C": keyc = !keyc; break;
+			    case "S": keys = !keys; break;
+				case "T": keyt = !keyt; break;
+				case "R": keyr = !keyr; break;
+			    case "X": keyx = !keyx; break;
+				case "D": keyd = !keyd; break;
+				case "L": keyl = !keyl; break;
+				case "M": keym = !keym; break;
+				case "H": keyh = !keyh; break;
+				case "1": key1 = !key1; break;
+				case "2": key2 = !key2; break;
+				case "3": key3 = !key3; break;
+				case "0": key0 = !key0; break;
+		  	}
+		  	link.style("display", (d) => {
+				
+				
+				var flag  = vis_by_node_score(d.value) && vis_by_node_score(d.value) && vis_by_link_score(d.value);
+				
+				linkedByIndex[d.source.index + "," + d.target.index] = flag;
+		        return flag ? "inline" : "none";
+		    });
+		    node.style("display", (d) => {
+				return (key0 || hasConnections(d)) && vis_by_node_score(d.value)
+					? "inline"
+					: "none";
+			});
+					
+						
+			if (highlight_node !== null) {
+			
+				if ((key0 || hasConnections(highlight_node)) && vis_by_node_score(highlight_node.value)) { 
+						if (focus_node!==null) set_focus(focus_node);
+						set_highlight(highlight_node);
+					}
+				else {exit_highlight();}
+			}
+		}	
+	}
+
+
+function vis_by_node_score(score) {
+	
+	if (isNumber(score)) {
+		if (score>=0.666) return keyh;
+		else if (score>=0.333) return keym;
+		else if (score>=0) return keyl;
+	}
+	return true;
+}
+
+
+function vis_by_link_score(score) {
+	if (isNumber(score)) {
+		if (score >= 0.666) return key3;
+		else if (score >= 0.333) return key2;
+		else if (score >= 0) return key1;
+	}
+	return true;
+}
+
+
+function isNumber(n) {
+   	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function dragstart(d) {
+  d3.select(this).classed("fixed", d.fixed = true);
+}
+
+
+function info_link(d) {
+		if (highlight_trans < 1) {
+		    circle.style("opacity", function(o) {
+					
+				document.getElementById('info1').innerHTML = "Номер узла: " + d.number_link;
+				document.getElementById('info2').innerHTML = "Тип связи: " + d.type_link;
+				document.getElementById('info3').innerHTML = "<form class='form-horizontal' method='POST' enctype='multipart/form-data'><input type='submit' id='reload' class='btn btn-primary'  value='" + 'Удалить связь' + "' /><form/>";
+				
+				// document.getElementById('info6').innerHTML = "<form class='form-horizontal' method='POST' enctype='multipart/form-data'><input type='submit' id='reload' class='btn btn-primary'  value='" + 'Добавить аккаунт' + "' /><form/>";
+		        document.getElementById('info7').innerHTML = "";
+				document.getElementById('info8').innerHTML = "";
+				document.getElementById('info6').innerHTML = "";
+		       //document.getElementById('info7').innerHTML = "";
+
+			});
+		}
+	}
+function info(d) {
+		if (highlight_trans < 1) {
+		    circle.style("opacity", function(o) {
+				document.getElementById('info1').innerHTML = "<img height='200' width='200' src='" + d.img + "' alt='Close'>" ;
+				
+				if (d.sur) {
+					document.getElementById('info3').innerHTML = d.sur;
+				}
+                else{
+				    document.getElementById('info3').innerHTML = '';
+				}
+				
+				if (d.city) {
+					document.getElementById('info4').innerHTML = d.city;
+				}
+				else{
+				    document.getElementById('info4').innerHTML = '';
+				}
+				
+				if (d.gender) {
+					if (d.gender == 'F') {
+						document.getElementById('info5').innerHTML = 'Пол - Женский';
+					}
+					else {
+						document.getElementById('info5').innerHTML = 'Пол - Мужской';
+					}
+				}
+				else{
+				    document.getElementById('info5').innerHTML = '';
+				}
+
+				if (d.vk) {
+					document.getElementById('info9').innerHTML = "<a href='" + d.vk + "'> " + d.vk +  "</a>" ;
+				}
+				else{
+				    document.getElementById('info9').innerHTML = '';
+				}
+				
+				document.getElementById('info8').innerHTML = "Кластер №" + d.number_class  ;
+				document.getElementById('info6').innerHTML = "<form class='form-horizontal' method='POST' enctype='multipart/form-data'><input type='submit' id='reload' class='btn btn-primary'  value='" + 'Добавить аккаунт' + "' /><form/>";
+		        document.getElementById('info7').innerHTML = "<form class='form-horizontal' method='POST' enctype='multipart/form-data'><input type='submit' id='reload' class='btn btn-primary'  value='" + 'Удалить аккаунт' + "' /><form/>";
+		    });
+		}
+	}
+	
+	
+</script>
+	</div>
+</div>
+
+</body>
+</html>

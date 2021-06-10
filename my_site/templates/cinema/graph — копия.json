@@ -1,0 +1,174 @@
+{ "node_all" : {
+		"node" : [ { 
+				 "name": "Рома Пупкин",
+				 "img": "C://my_site/my_site/static/faces//600701565/457239019/0.jpg",
+				 "children": [ {
+				   "name": "1",
+						   "children": [
+								{
+								  "hero": "Spider-Man",
+								  "name": "Peter Benjamin Parker", 
+								  "link": "http://marvel.com/characters/54/spider-man",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239017\\1.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "CAPTAIN MARVEL",
+								  "name": "Carol Danvers", 
+								  "link": "http://marvel.com/characters/9/captain_marvel",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239018\\0.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "HULK", 
+								  "name": "Robert Bruce Banner",
+								  "link": "http://marvel.com/characters/25/hulk",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239019\\0.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "Black Widow", 
+								  "name": "Natalia 'Natasha' Alianovna Romanova",
+								  "link": "http://marvel.com/characters/6/black_widow",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239020\\1.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "Daredevil", 
+								  "name": "Matthew Michael Murdock",
+								  "link": "http://marvel.com/characters/11/daredevil",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239021\\1.jpg",
+								  "size": 40000
+								}
+							] 
+						}, 
+					{ 
+				   "name": "2", 
+						   "children": [
+							{
+							  "hero": "Dr. Doom",
+							  "name": "Victor von Doom", 
+							  "link": "http://marvel.com/characters/13/dr_doom",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239017\\0.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Mystique",
+							  "name": "Unrevealed", 
+							  "link": "http://marvel.com/characters/1552/mystique",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239018\\1.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Red Skull",
+							  "name": "Johann Shmidt", 
+							  "link": "http://marvel.com/characters/1901/red_skull",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239019\\1.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Ronan",
+							  "name": "Ronan", 
+							  "link": "http://marvel.com/characters/49/ronan",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239020\\0.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Magneto",
+							  "name": "Max Eisenhardt", 
+							  "link": "http://marvel.com/characters/35/magneto",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239021\\0.jpg",
+							  "size": 40000
+							}
+						]
+					}
+				]
+			},
+			{ 
+				 "name": "Рома Пупкин",
+				 "img": "C://my_site/my_site/static/faces//600701565/457239019/0.jpg",
+				 "children": [ {
+				   "name": "1",
+						   "children": [
+								{
+								  "hero": "Spider-Man",
+								  "name": "Peter Benjamin Parker", 
+								  "link": "http://marvel.com/characters/54/spider-man",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239017\\1.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "CAPTAIN MARVEL",
+								  "name": "Carol Danvers", 
+								  "link": "http://marvel.com/characters/9/captain_marvel",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239018\\0.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "HULK", 
+								  "name": "Robert Bruce Banner",
+								  "link": "http://marvel.com/characters/25/hulk",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239019\\0.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "Black Widow", 
+								  "name": "Natalia 'Natasha' Alianovna Romanova",
+								  "link": "http://marvel.com/characters/6/black_widow",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239020\\1.jpg",
+								  "size": 40000
+								},
+								{
+								  "hero": "Daredevil", 
+								  "name": "Matthew Michael Murdock",
+								  "link": "http://marvel.com/characters/11/daredevil",
+								  "img":  "C://my_site/my_site/static/faces//600701565\\457239021\\1.jpg",
+								  "size": 40000
+								}
+							] 
+						}, 
+					{ 
+				   "name": "2", 
+						   "children": [
+							{
+							  "hero": "Dr. Doom",
+							  "name": "Victor von Doom", 
+							  "link": "http://marvel.com/characters/13/dr_doom",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239017\\0.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Mystique",
+							  "name": "Unrevealed", 
+							  "link": "http://marvel.com/characters/1552/mystique",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239018\\1.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Red Skull",
+							  "name": "Johann Shmidt", 
+							  "link": "http://marvel.com/characters/1901/red_skull",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239019\\1.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Ronan",
+							  "name": "Ronan", 
+							  "link": "http://marvel.com/characters/49/ronan",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239020\\0.jpg",
+							  "size": 40000
+							},
+							{
+							  "hero": "Magneto",
+							  "name": "Max Eisenhardt", 
+							  "link": "http://marvel.com/characters/35/magneto",
+							  "img":  "C://my_site/my_site/static/faces//600701565\\457239021\\0.jpg",
+							  "size": 40000
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

@@ -1,0 +1,84 @@
+template_data = {'wew': 'faces/600701565\\457239017\\1.jpg', 'left_user_info_dict': {'name': 'Рома', 'surname': 'Пупкин'},
+                         'right_user_info_dict': {'name': 'Алиса', 'surname': 'Френдлих'}, 'left_cluster_pack': {
+                '2376bc8e-8fdc-4a60-a855-4b5b549f9f51': ['faces//600701565\\457239017\\1.jpg',
+                                                         'faces//600701565\\457239018\\0.jpg',
+                                                         'faces//600701565\\457239019\\0.jpg',
+                                                         'faces//600701565\\457239020\\1.jpg',
+                                                         'faces//600701565\\457239021\\1.jpg',
+                                                         'faces//600701565\\457239022\\0.jpg',
+                                                         'faces//600701565\\457239023\\0.jpg',
+                                                         'faces//600701565\\457239024\\0.jpg',
+                                                         'faces//600701565\\457239025\\0.jpg',
+                                                         'faces//600701565\\457239026\\0.jpg',
+                                                         'faces//600701565\\457239027\\0.jpg',
+                                                         'faces//600701565\\457239028\\0.jpg',
+                                                         'faces//600701565\\457239029\\0.jpg',
+                                                         'faces//600701565\\457239030\\0.jpg',
+                                                         'faces//600701565\\457239031\\0.jpg',
+                                                         'faces//600701565\\457239032\\0.jpg'],
+                '3e6fefd8-d83a-4594-aeb2-91d9f691c8ad': ['faces//600701565\\457239017\\0.jpg',
+                                                         'faces//600701565\\457239018\\1.jpg',
+                                                         'faces//600701565\\457239019\\1.jpg',
+                                                         'faces//600701565\\457239020\\0.jpg',
+                                                         'faces//600701565\\457239021\\0.jpg']}, 'right_cluster_pack': {
+                '5badacbe-4661-4b11-aea1-157bd32db7c6': ['faces//585726671\\457239030\\0.jpg',
+                                                         'faces//585726671\\457239031\\0.jpg',
+                                                         'faces//585726671\\457239032\\0.jpg',
+                                                         'faces//585726671\\457239033\\0.jpg',
+                                                         'faces//585726671\\457239034\\0.jpg',
+                                                         'faces//585726671\\457239035\\0.jpg',
+                                                         'faces//585726671\\457239036\\0.jpg',
+                                                         'faces//585726671\\457239037\\0.jpg',
+                                                         'faces//585726671\\457239038\\0.jpg',
+                                                         'faces//585726671\\457239039\\0.jpg',
+                                                         'faces//585726671\\457239040\\0.jpg',
+                                                         'faces//585726671\\457239041\\0.jpg',
+                                                         'faces//585726671\\457239042\\0.jpg',
+                                                         'faces//585726671\\457239043\\0.jpg',
+                                                         'faces//585726671\\457239044\\0.jpg',
+                                                         'faces//585726671\\457239046\\0.jpg',
+                                                         'faces//585726671\\457239047\\0.jpg',
+                                                         'faces//585726671\\457239048\\1.jpg',
+                                                         'faces//585726671\\457239049\\0.jpg',
+                                                         'faces//585726671\\457239050\\1.jpg',
+                                                         'faces//585726671\\457239051\\0.jpg'],
+                '52db258a-70f4-4d67-a386-4f8e3ca896e2': ['faces//585726671\\457239047\\1.jpg',
+                                                         'faces//585726671\\457239048\\0.jpg',
+                                                         'faces//585726671\\457239049\\1.jpg',
+                                                         'faces//585726671\\457239050\\0.jpg',
+                                                         'faces//585726671\\457239051\\1.jpg']}, 'kind_dict': {
+                'first': [['faces//600701565\\457239017\\1.jpg', 'faces//585726671\\457239047\\1.jpg'],
+                          ['faces//585726671\\457239030\\0.jpg', 'faces//600701565\\457239017\\0.jpg']], 'second': [],
+                'third': []}}
+
+import json
+graph = {"links": [{"source": 346219128, "target": 160822336, "value": 1}], 
+    "nodes": [{"id": 160822336, "size": 10, "score": 1, "img":  "faces//600701565\\457239019\\1.jpg"}, {"id": 346219128, "size": 10, "score": 1 ,"img":  "faces//600701565\\457239019\\1.jpg"}],
+ "graph": []}
+
+nodes_graph = []
+link_graph = []
+cluster = []
+
+
+nodes_graph.append({"id": 112445, "size": 100, "score": 1, "img" : 'faces//600701565\\457239017\\1.jpg'})
+
+
+# {"source": 112445 , "target": 1243, "value": 1,  "dist": 700}
+
+for node_cluster in template_data['left_cluster_pack']:
+    link_graph.append({"source": 112445 , "target": node_cluster, "value": 1,  "dist": 500})
+    nodes_graph.append({"id": node_cluster, "size": 50, "score": 1, "img" : 'faces//600701565\\457239017\\1.jpg'})
+    for node in template_data['left_cluster_pack'][node_cluster]:
+        link_graph.append({"source": node_cluster, "target": node + node_cluster, "value": 2,  "dist": 200})
+        nodes_graph.append({"id": node + node_cluster, "cluster" : node_cluster ,"size": 10, "score": 2, "img": node})
+
+
+nodes_graph.append({"id": 1243, "size": 100, "score": 1, "img" : 'faces//600701565\\457239017\\1.jpg'})
+for node_cluster in template_data['right_cluster_pack']:
+    link_graph.append({"source": 1243 , "target": node_cluster, "value": 1, "dist": 500})
+    nodes_graph.append({"id": node_cluster, "size": 50, "score": 1, "img" : 'faces//600701565\\457239017\\1.jpg'})
+    for node in template_data['right_cluster_pack'][node_cluster]:
+        link_graph.append({"source": node_cluster, "target": node + node_cluster, "value": 2, "dist": 200})
+        nodes_graph.append({"id": node + node_cluster, "cluster" : node_cluster ,"size": 10, "score": 2, "img": node})
+{"links": link_graph,"nodes" :nodes_graph, "graph": []}
